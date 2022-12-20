@@ -7,15 +7,18 @@ export default {
       filteredCoins: [],
       titles: ['#', 'Coin', 'Price', 'Price Change', '24 Volume'],
       textSearch: '',
+      loading: false,
     };
   },
   async mounted() {
+    this.loading = true;
     const res = await fetch(
       'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1%sparklline=false'
     );
     const data = await res.json();
     this.coins = data;
     this.filteredCoins = data;
+    this.loading = false;
   },
   methods: {
     searchCoin() {
@@ -30,7 +33,8 @@ export default {
 </script>
 <template lang="">
   <div class="container">
-    <div class="row">
+    <div v-if="loading" class="row">Loading...</div>
+    <div class="row" v-if="!loading">
       <input
         type="text"
         class="form-control text-light bg-dark rounded-0 border-0 my-4"
